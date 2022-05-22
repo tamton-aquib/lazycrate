@@ -4,7 +4,8 @@ use crossterm::{
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use serde_derive::Deserialize;
+use lazycrate::app::{App, Mode};
+use lazycrate::utils;
 use std::{
     // error::Error,
     io,
@@ -18,33 +19,6 @@ use tui::{
     widgets::{Block, Borders, Paragraph, Wrap},
     Frame, Terminal,
 };
-
-#[derive(Deserialize)]
-struct Config {
-    dependencies: toml::value::Map<String, toml::Value>,
-}
-
-struct App {
-    content: Vec<char>,
-}
-
-impl App {
-    fn new() -> App {
-        App {
-            content: "Dummy text here".chars().collect::<Vec<char>>(),
-        }
-    }
-}
-
-fn get_crates_from_toml() -> Vec<String> {
-    let config: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
-    // println!("{:?}", config.dependencies);
-    config
-        .dependencies
-        .iter()
-        .map(|s| format!("{}", s.0))
-        .collect::<Vec<String>>()
-}
 
 fn main() -> Result<(), Error> {
     // setup terminal
@@ -82,7 +56,7 @@ fn run_app<B: Backend>(
 ) -> io::Result<()> {
     let mut last_tick = Instant::now();
     loop {
-        terminal.draw(|f| ui(f, &app))?;
+        terminal.draw(|f| ui(f, &mut app))?;
 
         let timeout = tick_rate
             .checked_sub(last_tick.elapsed())
@@ -93,12 +67,18 @@ fn run_app<B: Backend>(
                     KeyCode::Char('q') => {
                         return Ok(());
                     }
-                    KeyCode::Char(c) => {
-                        app.content.push(c);
+                    KeyCode::Char('i') => {
+                        app.mode = Mode::Insert;
                     }
-                    KeyCode::Backspace => {
-                        app.content.pop();
+                    KeyCode::Up | KeyCode::Char('k') => {
+                        app.cursor -= 1;
                     }
+                    KeyCode::Down | KeyCode::Char('j') => {
+                        app.cursor += 1;
+                    }
+                    // KeyCode::Char(c) => {
+                    // app.content.push(c);
+                    // }
                     _ => {}
                 };
             }
@@ -110,7 +90,7 @@ fn run_app<B: Backend>(
     }
 }
 
-fn ui<B: Backend>(f: &mut Frame<B>, _app: &App) {
+fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let size = f.size();
     let tokyodark = Color::Rgb(0x11, 0x12, 0x1D);
 
@@ -136,15 +116,28 @@ fn ui<B: Backend>(f: &mut Frame<B>, _app: &App) {
 
     // let nice = &app.content;
     // let noice = nice.into_iter().collect::<String>();
-    let all_crates = &get_crates_from_toml();
-    let mut text = vec![];
-    for c in all_crates {
-        let styled_c = Spans::from(Span::styled(
-            c,
-            Style::default().fg(Color::Green).bg(tokyodark),
-        ));
-        text.push(styled_c);
-    }
+    // let all_crates = &get_crates_from_toml();
+    let value_stuff = &utils::get_crates_from_toml();
+    app.crates = value_stuff.to_owned();
+    let text: Vec<Spans> = app
+        .crates
+        .iter()
+        .enumerate()
+        .map(|(i, c)| {
+            Spans::from(Span::styled(
+                c,
+                Style::default()
+                    .fg(Color::Green)
+                    .bg(tokyodark)
+                    .add_modifier(if app.cursor == (i as u8) {
+                        Modifier::BOLD
+                    } else {
+                        Modifier::empty()
+                    }),
+            ))
+        })
+        .collect();
+
     // let text = vec![
     // Spans::from(Span::styled(
     // all_crates,
