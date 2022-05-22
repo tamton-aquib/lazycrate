@@ -1,4 +1,9 @@
-use crate::parse_toml::Config;
+use serde_derive::Deserialize;
+
+#[derive(Deserialize)]
+pub struct Config {
+    pub dependencies: toml::value::Map<String, toml::Value>,
+}
 
 pub fn get_crates_from_toml() -> Vec<String> {
     let config: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
@@ -6,6 +11,6 @@ pub fn get_crates_from_toml() -> Vec<String> {
     config
         .dependencies
         .iter()
-        .map(|s| format!("{}", s.0))
+        .map(|s| s.0.to_string())
         .collect::<Vec<String>>()
 }
