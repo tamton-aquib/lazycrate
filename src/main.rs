@@ -1,10 +1,11 @@
 use anyhow::{Error, Result};
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
+    event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
-use lazycrate::app::{App, Mode};
+use lazycrate::app::App;
+use lazycrate::parse_keys;
 use lazycrate::ui;
 use std::{
     io,
@@ -58,26 +59,8 @@ fn run_app<B: Backend>(
             .unwrap_or_else(|| Duration::from_secs(0));
         if crossterm::event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
-                match key.code {
-                    KeyCode::Char('q') => {
-                        return Ok(());
-                    }
-                    KeyCode::Char('i') => {
-                        app.mode = Mode::Insert;
-                    }
-                    KeyCode::Up | KeyCode::Char('k') => {
-                        app.cursor -= 1;
-                    }
-                    KeyCode::Down | KeyCode::Char('j') => {
-                        app.cursor += 1;
-                    }
-                    KeyCode::Char('?') => {
-                        unimplemented!("Show help")
-                    }
-                    // KeyCode::Char(c) => {
-                    // app.content.push(c);
-                    // }
-                    _ => {}
+                if let Some(_) = parse_keys::parse_keys(&mut app, key) {
+                    return Ok(());
                 };
             }
         }
