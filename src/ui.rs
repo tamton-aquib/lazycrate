@@ -13,6 +13,15 @@ use tui::{
 pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let size = f.size();
     let tokyodark = Color::Rgb(0x11, 0x12, 0x1D);
+    let create_block = |title| {
+        Block::default()
+            .borders(Borders::ALL)
+            .style(Style::default().bg(Color::Rgb(17, 18, 29)).fg(Color::Black))
+            .title(Span::styled(
+                title,
+                Style::default().add_modifier(Modifier::BOLD).fg(Color::Red),
+            ))
+    };
 
     // Words made "loooong" to demonstrate line breaking.
     // let s = "Veeeeeeeeeeeeeeeery    loooooooooooooooooong   striiiiiiiiiiiiiiiiiiiiiiiiiing.   ";
@@ -23,15 +32,9 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_widget(block, size);
 
     let chunks = Layout::default()
-        .direction(Direction::Vertical)
+        .direction(Direction::Horizontal)
         .margin(5)
-        .constraints(
-            [
-                Constraint::Percentage(100),
-                // Constraint::Percentage(80),
-            ]
-            .as_ref(),
-        )
+        .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(size);
 
     // let nice = &app.content;
@@ -66,15 +69,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // // Spans::from(Span::styled(&long_line, Style::default().bg(Color::Green))),
     // ];
 
-    let create_block = |title| {
-        Block::default()
-            .borders(Borders::ALL)
-            .style(Style::default().bg(Color::Rgb(17, 18, 29)).fg(Color::Black))
-            .title(Span::styled(
-                title,
-                Style::default().add_modifier(Modifier::BOLD).fg(Color::Red),
-            ))
-    };
     // let paragraph = Paragraph::new(text.clone())
     // .style(Style::default().bg(Color::White).fg(Color::Black))
     // .block(create_block("Left, no wrap"))
@@ -86,6 +80,13 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[0]);
+
+    let paragraph = Paragraph::new(text.clone())
+        .style(Style::default().bg(Color::White).fg(Color::Black))
+        .block(create_block("Package Details"))
+        .alignment(Alignment::Left)
+        .wrap(Wrap { trim: true });
+    f.render_widget(paragraph, chunks[1]);
     // let paragraph = Paragraph::new(text.clone())
     // .style(Style::default().bg(Color::White).fg(Color::Black))
     // .block(create_block("Center, wrap"))

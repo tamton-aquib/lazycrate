@@ -14,7 +14,8 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             app.cursor += 1;
         }
         KeyCode::Char('?') => {
-            unimplemented!("Show help")
+            // popup("help".to_string());
+            unimplemented!("Show toggleable help menu for the current panel.");
         }
         // KeyCode::Char(c) => {
         // app.content.push(c);
