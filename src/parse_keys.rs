@@ -7,11 +7,16 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             return Some(());
         }
         KeyCode::Char('i') => app.mode = Mode::Insert,
+        KeyCode::Esc => app.mode = Mode::Normal,
         KeyCode::Up | KeyCode::Char('k') => {
-            app.cursor -= 1;
+            if app.cursor != 0 {
+                app.cursor -= 1;
+            }
         }
         KeyCode::Down | KeyCode::Char('j') => {
-            app.cursor += 1;
+            if app.cursor <= (app.panel.content.len() as u8) {
+                app.cursor += 1;
+            }
         }
         KeyCode::Left | KeyCode::Char('h') => {
             app.cycle_panels();

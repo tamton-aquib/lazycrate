@@ -13,8 +13,9 @@ use tui::{
 
 fn add_crates(app: &mut App) -> Vec<Spans> {
     let value_stuff = &utils::get_crates_from_toml();
-    app.crates = value_stuff.to_owned();
-    app.crates
+    app.panel.content = value_stuff.to_owned();
+    app.panel
+        .content
         .iter()
         .enumerate()
         .map(|(i, c)| {
@@ -36,8 +37,9 @@ fn add_crates(app: &mut App) -> Vec<Spans> {
 }
 fn add_package(app: &mut App) -> Vec<Spans> {
     let value_stuff = &utils::get_packages();
-    app.packages = value_stuff.to_owned();
-    app.packages
+    app.panel.content = value_stuff.to_owned();
+    app.panel
+        .content
         .iter()
         .enumerate()
         .map(|(i, c)| {
@@ -101,19 +103,21 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // .block(create_block("Left, no wrap"))
     // .alignment(Alignment::Left);
     // f.render_widget(paragraph, chunks[0]);
-    let paragraph = Paragraph::new(add_crates(app).clone())
-        .style(Style::default().bg(Color::White).fg(Color::Black))
-        .block(create_block("Crates"))
-        .alignment(Alignment::Left)
-        .wrap(Wrap { trim: true });
-    f.render_widget(paragraph, chunks[0]);
 
     let paragraph = Paragraph::new(add_package(app).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Package Details"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
+    f.render_widget(paragraph, chunks[0]);
+
+    let paragraph = Paragraph::new(add_crates(app).clone())
+        .style(Style::default().bg(Color::White).fg(Color::Black))
+        .block(create_block("Crates"))
+        .alignment(Alignment::Left)
+        .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[1]);
+
     // let paragraph = Paragraph::new(text.clone())
     // .style(Style::default().bg(Color::White).fg(Color::Black))
     // .block(create_block("Center, wrap"))
