@@ -4,10 +4,10 @@ use crate::utils;
 
 use tui::{
     backend::Backend,
-    layout::{Alignment, Constraint, Direction, Layout},
+    layout::{Alignment, Constraint, Direction, Layout, Rect},
     style::{Color, Modifier, Style},
     text::{Span, Spans},
-    widgets::{Block, Borders, Paragraph, Wrap},
+    widgets::{Block, Borders, Clear, Paragraph, Wrap},
     Frame,
 };
 
@@ -59,6 +59,31 @@ fn add_package(app: &mut App) -> Vec<Spans> {
         })
         .collect::<Vec<Spans>>()
 }
+fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
+    let popup_layout = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_y) / 2),
+                Constraint::Percentage(percent_y),
+                Constraint::Percentage((100 - percent_y) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(r);
+
+    Layout::default()
+        .direction(Direction::Horizontal)
+        .constraints(
+            [
+                Constraint::Percentage((100 - percent_x) / 2),
+                Constraint::Percentage(percent_x),
+                Constraint::Percentage((100 - percent_x) / 2),
+            ]
+            .as_ref(),
+        )
+        .split(popup_layout[1])[1]
+}
 pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let size = f.size();
     let tokyodark = Color::Rgb(0x11, 0x12, 0x1D);
@@ -82,7 +107,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
 
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .margin(5)
         .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(size);
 
@@ -103,10 +127,9 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // .block(create_block("Left, no wrap"))
     // .alignment(Alignment::Left);
     // f.render_widget(paragraph, chunks[0]);
-
     let paragraph = Paragraph::new(add_package(app).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
-        .block(create_block("Package Details"))
+        .block(create_block("Info"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[0]);
@@ -117,6 +140,15 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[1]);
+
+    if app.show_popup {
+        let area = centered_rect(80, 80, size);
+        let para = Paragraph::new(app.panel.get_help())
+            .block(create_block("Help menu!"))
+            .style(Style::default().fg(Color::White));
+        f.render_widget(Clear, area);
+        f.render_widget(para, area)
+    }
 
     // let paragraph = Paragraph::new(text.clone())
     // .style(Style::default().bg(Color::White).fg(Color::Black))

@@ -9,6 +9,7 @@ pub struct App {
     pub panel: Panel,
     pub cursor: u8,
     pub mode: Mode,
+    pub show_popup: bool,
 }
 
 impl App {
@@ -21,6 +22,7 @@ impl App {
             },
             cursor: 0,
             mode: Mode::Normal,
+            show_popup: false,
         }
     }
 

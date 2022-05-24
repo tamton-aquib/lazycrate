@@ -7,6 +7,7 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             return Some(());
         }
         KeyCode::Char('i') => app.mode = Mode::Insert,
+        KeyCode::Char('?') => app.show_popup = !app.show_popup,
         KeyCode::Esc => app.mode = Mode::Normal,
         KeyCode::Up | KeyCode::Char('k') => {
             if app.cursor != 0 {
@@ -14,7 +15,7 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             }
         }
         KeyCode::Down | KeyCode::Char('j') => {
-            if app.cursor <= (app.panel.content.len() as u8) {
+            if app.cursor < (app.panel.content.len() as u8) {
                 app.cursor += 1;
             }
         }
@@ -23,10 +24,6 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
         }
         KeyCode::Right | KeyCode::Char('l') => {
             app.cycle_panels();
-        }
-        KeyCode::Char('?') => {
-            // popup("help".to_string());
-            unimplemented!("Show toggleable help menu for the current panel.");
         }
         // KeyCode::Char(c) => {
         // app.content.push(c);
