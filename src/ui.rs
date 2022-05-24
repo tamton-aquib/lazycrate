@@ -11,8 +11,11 @@ use tui::{
     Frame,
 };
 
-fn add_crates(app: &mut App) -> Vec<Spans> {
-    let value_stuff = &utils::get_crates_from_toml();
+fn get_content(app: &mut App, panel: PanelName) -> Vec<Spans> {
+    let value_stuff = match panel {
+        PanelName::Package => utils::get_package_info(),
+        PanelName::Crates => utils::get_crates_from_toml(),
+    };
     app.panel.content = value_stuff.to_owned();
     app.panel
         .content
@@ -25,7 +28,7 @@ fn add_crates(app: &mut App) -> Vec<Spans> {
                     .fg(Color::Green)
                     .bg(Color::Rgb(0x11, 0x12, 0x1D))
                     .add_modifier(
-                        if app.cursor == (i as u8) && app.panel.panel_name == PanelName::Crates {
+                        if app.cursor == (i as u8) && app.panel.panel_name == panel {
                             Modifier::BOLD
                         } else {
                             Modifier::empty()
@@ -35,30 +38,7 @@ fn add_crates(app: &mut App) -> Vec<Spans> {
         })
         .collect::<Vec<Spans>>()
 }
-fn add_package(app: &mut App) -> Vec<Spans> {
-    let value_stuff = &utils::get_packages();
-    app.panel.content = value_stuff.to_owned();
-    app.panel
-        .content
-        .iter()
-        .enumerate()
-        .map(|(i, c)| {
-            Spans::from(Span::styled(
-                c,
-                Style::default()
-                    .fg(Color::Green)
-                    .bg(Color::Rgb(0x11, 0x12, 0x1D))
-                    .add_modifier(
-                        if app.cursor == (i as u8) && app.panel.panel_name == PanelName::Package {
-                            Modifier::BOLD
-                        } else {
-                            Modifier::empty()
-                        },
-                    ),
-            ))
-        })
-        .collect::<Vec<Spans>>()
-}
+
 fn centered_rect(percent_x: u16, percent_y: u16, r: Rect) -> Rect {
     let popup_layout = Layout::default()
         .direction(Direction::Vertical)
@@ -97,11 +77,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
             ))
     };
 
-    // Words made "loooong" to demonstrate line breaking.
-    // let s = "Veeeeeeeeeeeeeeeery    loooooooooooooooooong   striiiiiiiiiiiiiiiiiiiiiiiiiing.   ";
-    // let mut long_line = s.repeat(usize::from(size.width) / s.len() + 4);
-    // long_line.push('\n');
-
     let block = Block::default().style(Style::default().bg(tokyodark));
     f.render_widget(block, size);
 
@@ -110,31 +85,14 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(size);
 
-    // let nice = &app.content;
-    // let noice = nice.into_iter().collect::<String>();
-    // let all_crates = &get_crates_from_toml();
-    // add_crates(app);
-    // let text = vec![
-    // Spans::from(Span::styled(
-    // all_crates,
-    // Style::default().fg(Color::Green).bg(tokyodark),
-    // )),
-    // // Spans::from(Span::styled(&long_line, Style::default().bg(Color::Green))),
-    // ];
-
-    // let paragraph = Paragraph::new(text.clone())
-    // .style(Style::default().bg(Color::White).fg(Color::Black))
-    // .block(create_block("Left, no wrap"))
-    // .alignment(Alignment::Left);
-    // f.render_widget(paragraph, chunks[0]);
-    let paragraph = Paragraph::new(add_package(app).clone())
+    let paragraph = Paragraph::new(get_content(app, PanelName::Package).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Info"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[0]);
 
-    let paragraph = Paragraph::new(add_crates(app).clone())
+    let paragraph = Paragraph::new(get_content(app, PanelName::Crates).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Crates"))
         .alignment(Alignment::Left)

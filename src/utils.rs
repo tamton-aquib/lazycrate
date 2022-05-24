@@ -23,7 +23,7 @@ pub fn get_crates_from_toml() -> Vec<String> {
         .collect()
 }
 
-pub fn get_packages() -> Vec<String> {
+pub fn get_package_info() -> Vec<String> {
     let cfg: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
     format!(
         r#"
