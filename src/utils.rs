@@ -3,6 +3,7 @@ use serde_derive::Deserialize;
 #[derive(Deserialize)]
 pub struct Package {
     name: String,
+    description: String,
     version: String,
 }
 
@@ -19,11 +20,21 @@ pub fn get_crates_from_toml() -> Vec<String> {
         .dependencies
         .iter()
         .map(|s| s.0.to_string())
-        .collect::<Vec<String>>()
+        .collect()
 }
 
 pub fn get_packages() -> Vec<String> {
-    let config: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
-    // println!("{:?}", config.dependencies);
-    vec![config.package.name, config.package.version]
+    let cfg: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
+    format!(
+        r#"
+    Name: {}
+    Description: {}
+    Version: {}
+    "#,
+        cfg.package.name, cfg.package.description, cfg.package.version
+    )
+    .trim()
+    .split('\n')
+    .map(|s| s.to_owned())
+    .collect()
 }

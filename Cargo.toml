@@ -1,6 +1,7 @@
 [package]
 name = "lazycrate"
 version = "0.1.0"
+description = "Similar to lazydocker and lazynpm but for crates."
 edition = "2021"
 
 [dependencies]

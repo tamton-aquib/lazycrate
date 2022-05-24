@@ -1,4 +1,5 @@
 use crate::app::App;
+use crate::panel::PanelName;
 use crate::utils;
 
 use tui::{
@@ -10,6 +11,52 @@ use tui::{
     Frame,
 };
 
+fn add_crates(app: &mut App) -> Vec<Spans> {
+    let value_stuff = &utils::get_crates_from_toml();
+    app.crates = value_stuff.to_owned();
+    app.crates
+        .iter()
+        .enumerate()
+        .map(|(i, c)| {
+            Spans::from(Span::styled(
+                c,
+                Style::default()
+                    .fg(Color::Green)
+                    .bg(Color::Rgb(0x11, 0x12, 0x1D))
+                    .add_modifier(
+                        if app.cursor == (i as u8) && app.panel.panel_name == PanelName::Crates {
+                            Modifier::BOLD
+                        } else {
+                            Modifier::empty()
+                        },
+                    ),
+            ))
+        })
+        .collect::<Vec<Spans>>()
+}
+fn add_package(app: &mut App) -> Vec<Spans> {
+    let value_stuff = &utils::get_packages();
+    app.packages = value_stuff.to_owned();
+    app.packages
+        .iter()
+        .enumerate()
+        .map(|(i, c)| {
+            Spans::from(Span::styled(
+                c,
+                Style::default()
+                    .fg(Color::Green)
+                    .bg(Color::Rgb(0x11, 0x12, 0x1D))
+                    .add_modifier(
+                        if app.cursor == (i as u8) && app.panel.panel_name == PanelName::Package {
+                            Modifier::BOLD
+                        } else {
+                            Modifier::empty()
+                        },
+                    ),
+            ))
+        })
+        .collect::<Vec<Spans>>()
+}
 pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let size = f.size();
     let tokyodark = Color::Rgb(0x11, 0x12, 0x1D);
@@ -32,7 +79,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_widget(block, size);
 
     let chunks = Layout::default()
-        .direction(Direction::Horizontal)
+        .direction(Direction::Vertical)
         .margin(5)
         .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(size);
@@ -40,27 +87,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // let nice = &app.content;
     // let noice = nice.into_iter().collect::<String>();
     // let all_crates = &get_crates_from_toml();
-    let value_stuff = &utils::get_crates_from_toml();
-    app.crates = value_stuff.to_owned();
-    let text: Vec<Spans> = app
-        .crates
-        .iter()
-        .enumerate()
-        .map(|(i, c)| {
-            Spans::from(Span::styled(
-                c,
-                Style::default()
-                    .fg(Color::Green)
-                    .bg(tokyodark)
-                    .add_modifier(if app.cursor == (i as u8) {
-                        Modifier::BOLD
-                    } else {
-                        Modifier::empty()
-                    }),
-            ))
-        })
-        .collect();
-
+    // add_crates(app);
     // let text = vec![
     // Spans::from(Span::styled(
     // all_crates,
@@ -74,14 +101,14 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // .block(create_block("Left, no wrap"))
     // .alignment(Alignment::Left);
     // f.render_widget(paragraph, chunks[0]);
-    let paragraph = Paragraph::new(text.clone())
+    let paragraph = Paragraph::new(add_crates(app).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Crates"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, chunks[0]);
 
-    let paragraph = Paragraph::new(text.clone())
+    let paragraph = Paragraph::new(add_package(app).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Package Details"))
         .alignment(Alignment::Left)
