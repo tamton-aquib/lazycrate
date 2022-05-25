@@ -1,12 +1,11 @@
-use crate::app::{App, Mode};
+use crate::app::App; // Mode
+use crate::keymaps;
 use crossterm::event::{KeyCode, KeyEvent};
 
 pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
     match key.code {
         KeyCode::Char('q') => return Some(()),
-        KeyCode::Char('i') => app.mode = Mode::Insert,
         KeyCode::Char('?') => app.show_popup = !app.show_popup,
-        KeyCode::Esc => app.mode = Mode::Normal,
         KeyCode::Up | KeyCode::Char('k') => {
             if app.cursor != 0 {
                 app.cursor -= 1;
@@ -23,9 +22,9 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
         KeyCode::Right | KeyCode::Char('l') => {
             app.cycle_panels(true);
         }
-        // KeyCode::Char(c) => {
-        // app.content.push(c);
-        // }
+        KeyCode::Char(c) => {
+            keymaps::idk(app, c);
+        }
         _ => {}
     }
     None
