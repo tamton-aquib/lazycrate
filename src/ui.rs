@@ -81,23 +81,46 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_widget(block, size);
 
     let chunks = Layout::default()
-        .direction(Direction::Vertical)
+        .direction(Direction::Horizontal)
         .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(size);
+    let left_chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)])
+        .split(chunks[0]);
+    let right_chunks = Layout::default()
+        .direction(Direction::Vertical)
+        .constraints([Constraint::Percentage(30), Constraint::Percentage(70)])
+        .split(chunks[1]);
 
+    // Left panels
     let paragraph = Paragraph::new(get_content(app, PanelName::Package).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Info"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
-    f.render_widget(paragraph, chunks[0]);
+    f.render_widget(paragraph, left_chunks[0]);
 
     let paragraph = Paragraph::new(get_content(app, PanelName::Crates).clone())
         .style(Style::default().bg(Color::White).fg(Color::Black))
         .block(create_block("Crates"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
-    f.render_widget(paragraph, chunks[1]);
+    f.render_widget(paragraph, left_chunks[1]);
+
+    // Right panels
+    let paragraph = Paragraph::new("Status stuff example")
+        .style(Style::default().bg(Color::White).fg(Color::Black))
+        .block(create_block("Status"))
+        .alignment(Alignment::Left)
+        .wrap(Wrap { trim: true });
+    f.render_widget(paragraph, right_chunks[0]);
+    let paragraph = Paragraph::new("Current output example")
+        .style(Style::default().bg(Color::White).fg(Color::Black))
+        .block(create_block("Output"))
+        .alignment(Alignment::Left)
+        .wrap(Wrap { trim: true });
+    f.render_widget(paragraph, right_chunks[1]);
 
     if app.show_popup {
         let area = centered_rect(80, 80, size);
