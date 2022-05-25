@@ -3,9 +3,7 @@ use crossterm::event::{KeyCode, KeyEvent};
 
 pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
     match key.code {
-        KeyCode::Char('q') => {
-            return Some(());
-        }
+        KeyCode::Char('q') => return Some(()),
         KeyCode::Char('i') => app.mode = Mode::Insert,
         KeyCode::Char('?') => app.show_popup = !app.show_popup,
         KeyCode::Esc => app.mode = Mode::Normal,

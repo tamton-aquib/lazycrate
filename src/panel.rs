@@ -1,7 +1,9 @@
 #[derive(PartialEq, Clone)]
 pub enum PanelName {
+    Status,
     Package,
     Crates,
+    Commands,
 }
 
 pub struct Panel {

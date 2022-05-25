@@ -26,17 +26,17 @@ impl App {
         }
     }
 
+    // FIX: cycling is broken.
     pub fn cycle_panels(&mut self) {
-        let panel_names = [PanelName::Crates, PanelName::Package];
+        let panel_names = [PanelName::Crates, PanelName::Package, PanelName::Commands];
         let new_index = (self.panel.index + 1) % (panel_names.len() as u8);
-        if new_index <= (panel_names.len() as u8) {
-            let panelname = &panel_names[self.panel.index as usize];
-            self.panel = Panel {
-                index: new_index,
-                panel_name: panelname.clone(),
-                content: self.panel.content.clone(),
-            };
-            self.cursor = 0;
-        }
+        // let new_index = panel_names[self.panel.index + 1];
+        // let new_index = panel_names.get((self.panel.index + 1) as usize).unwrap();
+        // if new_index <= (panel_names.len() as u8) {
+        let panelname = &panel_names[self.panel.index as usize];
+        self.panel.index = new_index;
+        self.panel.panel_name = panelname.clone();
+        self.cursor = 0;
+        // }
     }
 }
