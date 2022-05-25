@@ -16,12 +16,11 @@ pub struct Config {
 }
 
 pub fn get_status(app: &App) -> Vec<String> {
-    // vec!["Status message".to_string()]
     let item = match app.panel.panel_name {
         PanelName::Crates => "Crates",
         PanelName::Package => "Info",
         PanelName::Commands => "Commands",
-        _ => "undefined",
+        _ => "Undefined",
     }
     .to_string();
     vec![item]
@@ -34,7 +33,6 @@ pub fn get_commands() -> Vec<String> {
 
 pub fn get_crates_from_toml() -> Vec<String> {
     let cfg: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
-    // println!("{:?}", config.dependencies);
     cfg.dependencies.iter().map(|s| s.0.to_string()).collect()
 }
 

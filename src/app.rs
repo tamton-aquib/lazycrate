@@ -26,17 +26,17 @@ impl App {
         }
     }
 
-    // FIX: cycling is broken.
-    pub fn cycle_panels(&mut self) {
-        let panel_names = [PanelName::Crates, PanelName::Package, PanelName::Commands];
-        let new_index = (self.panel.index + 1) % (panel_names.len() as u8);
-        // let new_index = panel_names[self.panel.index + 1];
-        // let new_index = panel_names.get((self.panel.index + 1) as usize).unwrap();
-        // if new_index <= (panel_names.len() as u8) {
-        let panelname = &panel_names[self.panel.index as usize];
-        self.panel.index = new_index;
-        self.panel.panel_name = panelname.clone();
+    // TODO: clean this func.
+    pub fn cycle_panels(&mut self, dir: bool) {
+        let panel_names = [PanelName::Package, PanelName::Crates, PanelName::Commands];
+        let pos = panel_names
+            .iter()
+            .position(|r| r == &self.panel.panel_name)
+            .unwrap();
+        let direction = if dir { 1 } else { 2 };
+        let new_index = (pos + direction) % panel_names.len();
+        self.panel.index = new_index as u8;
+        self.panel.panel_name = panel_names.get(new_index).unwrap().to_owned();
         self.cursor = 0;
-        // }
     }
 }

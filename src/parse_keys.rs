@@ -18,10 +18,10 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             }
         }
         KeyCode::Left | KeyCode::Char('h') => {
-            app.cycle_panels();
+            app.cycle_panels(false);
         }
         KeyCode::Right | KeyCode::Char('l') => {
-            app.cycle_panels();
+            app.cycle_panels(true);
         }
         // KeyCode::Char(c) => {
         // app.content.push(c);

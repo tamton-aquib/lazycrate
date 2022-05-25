@@ -138,12 +138,4 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         f.render_widget(Clear, area);
         f.render_widget(para, area)
     }
-
-    // let paragraph = Paragraph::new(text.clone())
-    // .style(Style::default().bg(Color::White).fg(Color::Black))
-    // .block(create_block("Center, wrap"))
-    // .alignment(Alignment::Center)
-    // .wrap(Wrap { trim: true })
-    // .scroll((app.scroll, 0));
-    // f.render_widget(paragraph, chunks[2]);
 }

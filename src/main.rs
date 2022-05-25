@@ -1,4 +1,3 @@
-use anyhow::{Error, Result};
 use crossterm::{
     event::{self, DisableMouseCapture, EnableMouseCapture, Event},
     execute,
@@ -16,20 +15,17 @@ use tui::{
     Terminal,
 };
 
-fn main() -> Result<(), Error> {
-    // setup terminal
+fn main() -> Result<(), io::Error> {
     enable_raw_mode()?;
     let mut stdout = io::stdout();
     execute!(stdout, EnterAlternateScreen, EnableMouseCapture)?;
     let backend = CrosstermBackend::new(stdout);
     let mut terminal = Terminal::new(backend)?;
 
-    // create app and run it
     let tick_rate = Duration::from_millis(250);
     let app = App::new();
     let res = run_app(&mut terminal, app, tick_rate);
 
-    // restore terminal
     disable_raw_mode()?;
     execute!(
         terminal.backend_mut(),
@@ -65,7 +61,6 @@ fn run_app<B: Backend>(
             }
         }
         if last_tick.elapsed() >= tick_rate {
-            // app.on_tick() if any
             last_tick = Instant::now();
         }
     }

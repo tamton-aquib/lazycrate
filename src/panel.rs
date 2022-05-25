@@ -14,7 +14,6 @@ pub struct Panel {
 
 impl Panel {
     pub fn get_help(&self) -> String {
-        // not a reference to thor+loki
         "Noice".to_string()
     }
 }
