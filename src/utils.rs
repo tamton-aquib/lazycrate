@@ -1,5 +1,5 @@
-use crate::app::App;
-use crate::panel::PanelName;
+// use crate::app::App;
+// use crate::panel::PanelName;
 use serde_derive::Deserialize;
 
 #[derive(Deserialize)]
@@ -15,14 +15,14 @@ pub struct Config {
     pub package: Package,
 }
 
-pub fn get_status(app: &App) -> Vec<String> {
-    let item = match app.panels.get(&app.current_panel).unwrap().panel_name {
-        PanelName::Crates => "Crates",
-        PanelName::Package => "Info",
-        PanelName::Commands => "Commands",
-        _ => "Undefined",
-    };
-    vec![item.to_string()]
+pub fn update_status() -> Vec<String> {
+    // let item = match app.panels.get(&app.current_panel).unwrap().panel_name {
+    // PanelName::Crates => "Crates",
+    // PanelName::Package => "Info",
+    // PanelName::Commands => "Commands",
+    // _ => "Undefined",
+    // };
+    vec!["test".to_string()]
 }
 
 pub fn get_commands() -> Vec<String> {
@@ -37,16 +37,9 @@ pub fn get_crates_from_toml() -> Vec<String> {
 
 pub fn get_package_info() -> Vec<String> {
     let cfg: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
-    format!(
-        r#"
-    Name: {}
-    Description: {}
-    Version: {}
-    "#,
-        cfg.package.name, cfg.package.description, cfg.package.version
-    )
-    .trim()
-    .split('\n')
-    .map(|s| s.to_owned())
-    .collect()
+    vec![
+        format!("Name: {}", cfg.package.name),
+        format!("Description: {}", cfg.package.description),
+        format!("Version: {}", cfg.package.version),
+    ]
 }

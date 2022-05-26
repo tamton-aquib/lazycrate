@@ -10,10 +10,9 @@ use tui::{
     Frame,
 };
 
-// CONTINUE
 fn get_content(app: &mut App, panel: PanelName) -> Vec<Spans> {
     app.panels
-        .get_mut(&panel) // TODO: too many of these
+        .get_mut(&panel)
         .unwrap()
         .content
         .iter()
@@ -81,7 +80,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     let left_chunks = Layout::default()
         .direction(Direction::Vertical)
         .constraints([
-            Constraint::Percentage(10),
+            Constraint::Length(3),
             Constraint::Percentage(20),
             Constraint::Percentage(35),
             Constraint::Percentage(35),
@@ -95,7 +94,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // Left panels
     let paragraph = Paragraph::new(get_content(app, PanelName::Status))
         .block(create_block("Status"))
-        .scroll((1, 1))
+        // .scroll((1, 1))
         .alignment(Alignment::Left);
     f.render_widget(paragraph, left_chunks[0]);
     let paragraph = Paragraph::new(get_content(app, PanelName::Package))
@@ -119,6 +118,7 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // Right panels
     // .block(create_noheader_block())
     let paragraph = Paragraph::new("Status stuff example")
+        .block(create_noheader_block())
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, right_chunks[0]);

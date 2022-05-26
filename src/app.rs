@@ -17,7 +17,6 @@ pub struct App {
 }
 
 impl App {
-    // setup|init function
     pub fn new() -> App {
         let panel_crates = Panel {
             index: 0,
@@ -32,7 +31,7 @@ impl App {
         let panel_status = Panel {
             index: 0,
             panel_name: PanelName::Status,
-            content: vec![],
+            content: utils::update_status(),
         };
         let panel_commands = Panel {
             index: 0,
@@ -58,9 +57,14 @@ impl App {
 
     // TODO: clean this func.
     pub fn cycle_panels(&mut self, dir: bool) {
-        let panel_names = [PanelName::Package, PanelName::Crates, PanelName::Commands];
+        let panel_names = [
+            PanelName::Status,
+            PanelName::Package,
+            PanelName::Crates,
+            PanelName::Commands,
+        ];
 
-        let direction = if dir { 1 } else { 2 };
+        let direction = if dir { 1 } else { panel_names.len() - 1 };
         let new_index = (panel_names
             .iter()
             .position(|r| r == &self.current_panel)
