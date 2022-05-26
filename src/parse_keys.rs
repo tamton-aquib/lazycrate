@@ -16,7 +16,8 @@ pub fn parse_keys(app: &mut App, key: KeyEvent) -> Option<()> {
             }
         }
         KeyCode::Down | KeyCode::Char('j') => {
-            if app.cursor < (app.panels.get(&app.current_panel).unwrap().content.len() as u8) {
+            let panel_len = app.panels.get(&app.current_panel).unwrap().content.len();
+            if app.cursor < panel_len as u8 - 1 {
                 app.cursor += 1;
             }
         }
