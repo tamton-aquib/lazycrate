@@ -1,4 +1,4 @@
-#[derive(PartialEq, Clone)]
+#[derive(PartialEq, Clone, Eq, Hash, Copy)]
 pub enum PanelName {
     Status,
     Package,
@@ -14,6 +14,12 @@ pub struct Panel {
 
 impl Panel {
     pub fn get_help(&self) -> String {
-        "Noice".to_string()
+        let tp = match self.panel_name {
+            PanelName::Package => "packages",
+            PanelName::Crates => "crates",
+            PanelName::Status => "status",
+            PanelName::Commands => "commands",
+        };
+        format!("This is a help page for {} module!", tp)
     }
 }

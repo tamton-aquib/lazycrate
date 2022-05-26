@@ -1,6 +1,5 @@
 use crate::app::App;
 use crate::panel::PanelName;
-use crate::utils;
 
 use tui::{
     backend::Backend,
@@ -11,14 +10,11 @@ use tui::{
     Frame,
 };
 
+// CONTINUE
 fn get_content(app: &mut App, panel: PanelName) -> Vec<Spans> {
-    app.panel.content = match panel {
-        PanelName::Package => utils::get_package_info(),
-        PanelName::Crates => utils::get_crates_from_toml(),
-        PanelName::Status => utils::get_status(&app),
-        PanelName::Commands => utils::get_commands(),
-    };
-    app.panel
+    app.panels
+        .get_mut(&panel) // TODO: too many of these
+        .unwrap()
         .content
         .iter()
         .enumerate()
@@ -26,7 +22,7 @@ fn get_content(app: &mut App, panel: PanelName) -> Vec<Spans> {
             Spans::from(Span::styled(
                 c,
                 Style::default().fg(Color::Green).add_modifier(
-                    if app.cursor == (i as u8) && app.panel.panel_name == panel {
+                    if app.cursor == (i as u8) && app.current_panel == panel {
                         Modifier::BOLD
                     } else {
                         Modifier::empty()
@@ -102,27 +98,27 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .scroll((1, 1))
         .alignment(Alignment::Left);
     f.render_widget(paragraph, left_chunks[0]);
-    let paragraph = Paragraph::new(get_content(app, PanelName::Package).clone())
+    let paragraph = Paragraph::new(get_content(app, PanelName::Package))
         .block(create_block("Info"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, left_chunks[1]);
 
-    let paragraph = Paragraph::new(get_content(app, PanelName::Crates).clone())
+    let paragraph = Paragraph::new(get_content(app, PanelName::Crates))
         .block(create_block("Crates"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, left_chunks[2]);
 
-    let paragraph = Paragraph::new(get_content(app, PanelName::Commands).clone())
+    let paragraph = Paragraph::new(get_content(app, PanelName::Commands))
         .block(create_block("Commands"))
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, left_chunks[3]);
 
     // Right panels
+    // .block(create_noheader_block())
     let paragraph = Paragraph::new("Status stuff example")
-        .block(create_noheader_block())
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, right_chunks[0]);
@@ -134,7 +130,8 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
 
     if app.show_popup {
         let area = centered_rect(80, 80, size);
-        let para = Paragraph::new(app.panel.get_help()).block(create_block("Help menu!"));
+        let para = Paragraph::new(app.panels.get(&app.current_panel).unwrap().get_help())
+            .block(create_block("Help menu!"));
         f.render_widget(Clear, area);
         f.render_widget(para, area)
     }

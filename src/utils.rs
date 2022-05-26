@@ -16,14 +16,13 @@ pub struct Config {
 }
 
 pub fn get_status(app: &App) -> Vec<String> {
-    let item = match app.panel.panel_name {
+    let item = match app.panels.get(&app.current_panel).unwrap().panel_name {
         PanelName::Crates => "Crates",
         PanelName::Package => "Info",
         PanelName::Commands => "Commands",
         _ => "Undefined",
-    }
-    .to_string();
-    vec![item]
+    };
+    vec![item.to_string()]
 }
 
 pub fn get_commands() -> Vec<String> {
