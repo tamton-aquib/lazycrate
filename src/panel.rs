@@ -4,6 +4,7 @@ pub enum PanelName {
     Package,
     Crates,
     Commands,
+    Output,
 }
 
 pub struct Panel {
@@ -19,6 +20,7 @@ impl Panel {
             PanelName::Crates => "crates",
             PanelName::Status => "status",
             PanelName::Commands => "commands",
+            PanelName::Output => "output",
         };
         format!("This is a help page for {} module!", tp)
     }

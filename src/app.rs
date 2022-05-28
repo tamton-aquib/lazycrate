@@ -8,7 +8,6 @@ pub enum Mode {
 }
 
 pub struct App {
-    // pub panel: Panel,
     pub panels: HashMap<PanelName, Panel>,
     pub current_panel: PanelName,
     pub cursor: u8,
@@ -38,12 +37,18 @@ impl App {
             panel_name: PanelName::Commands,
             content: utils::get_commands(),
         };
+        let panel_output = Panel {
+            index: 0,
+            panel_name: PanelName::Output,
+            content: utils::get_output(),
+        };
 
         let nicemap = HashMap::from([
             (PanelName::Crates, panel_crates),
             (PanelName::Package, panel_package),
             (PanelName::Status, panel_status),
             (PanelName::Commands, panel_commands),
+            (PanelName::Output, panel_output),
         ]);
 
         App {
@@ -55,7 +60,13 @@ impl App {
         }
     }
 
-    // TODO: clean this func.
+    pub fn get_panel(&mut self) -> &mut Panel {
+        self.panels.get_mut(&self.current_panel).unwrap()
+    }
+    pub fn get_specific(&mut self, name: PanelName) -> &mut Panel {
+        self.panels.get_mut(&name).unwrap()
+    }
+
     pub fn cycle_panels(&mut self, dir: bool) {
         let panel_names = [
             PanelName::Status,

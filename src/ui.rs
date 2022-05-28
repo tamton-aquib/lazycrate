@@ -99,8 +99,8 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_widget(paragraph, left_chunks[0]);
     let paragraph = Paragraph::new(get_content(app, PanelName::Package))
         .block(create_block("Info"))
-        .alignment(Alignment::Left)
-        .wrap(Wrap { trim: true });
+        .alignment(Alignment::Left);
+    // .wrap(Wrap { trim: true });
     f.render_widget(paragraph, left_chunks[1]);
 
     let paragraph = Paragraph::new(get_content(app, PanelName::Crates))
@@ -122,16 +122,15 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, right_chunks[0]);
-    let paragraph = Paragraph::new("Current output example")
+    let paragraph = Paragraph::new(get_content(app, PanelName::Output))
         .block(create_noheader_block())
         .alignment(Alignment::Left)
         .wrap(Wrap { trim: true });
     f.render_widget(paragraph, right_chunks[1]);
 
     if app.show_popup {
-        let area = centered_rect(80, 80, size);
-        let para = Paragraph::new(app.panels.get(&app.current_panel).unwrap().get_help())
-            .block(create_block("Help menu!"));
+        let area = centered_rect(70, 70, size);
+        let para = Paragraph::new(app.get_panel().get_help()).block(create_block("Help menu!"));
         f.render_widget(Clear, area);
         f.render_widget(para, area)
     }

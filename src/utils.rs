@@ -25,6 +25,10 @@ pub fn update_status() -> Vec<String> {
     vec!["test".to_string()]
 }
 
+pub fn get_output() -> Vec<String> {
+    vec!["output line example".to_owned()]
+}
+
 pub fn get_commands() -> Vec<String> {
     let nice = ["clippy", "format", "search", "doc", "tree"];
     nice.map(|s| s.to_owned()).to_vec()
