@@ -116,7 +116,6 @@ pub fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_widget(paragraph, left_chunks[3]);
 
     // Right panels
-    // .block(create_noheader_block())
     let paragraph = Paragraph::new("Status stuff example")
         .block(create_noheader_block())
         .alignment(Alignment::Left)

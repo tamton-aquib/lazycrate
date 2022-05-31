@@ -1,5 +1,3 @@
-// use crate::app::App;
-// use crate::panel::PanelName;
 use serde_derive::Deserialize;
 
 #[derive(Deserialize)]
@@ -16,12 +14,6 @@ pub struct Config {
 }
 
 pub fn update_status() -> Vec<String> {
-    // let item = match app.panels.get(&app.current_panel).unwrap().panel_name {
-    // PanelName::Crates => "Crates",
-    // PanelName::Package => "Info",
-    // PanelName::Commands => "Commands",
-    // _ => "Undefined",
-    // };
     vec!["test".to_string()]
 }
 
@@ -30,13 +22,22 @@ pub fn get_output() -> Vec<String> {
 }
 
 pub fn get_commands() -> Vec<String> {
-    let nice = ["clippy", "format", "search", "doc", "tree"];
-    nice.map(|s| s.to_owned()).to_vec()
+    let cmds = ["clippy", "format", "search", "doc", "tree"];
+    cmds.map(|s| s.to_owned()).to_vec()
 }
 
 pub fn get_crates_from_toml() -> Vec<String> {
     let cfg: Config = toml::from_str(include_str!("../Cargo.toml")).unwrap();
-    cfg.dependencies.iter().map(|s| s.0.to_string()).collect()
+    cfg.dependencies
+        .iter()
+        .map(|s| {
+            format!(
+                "{}  ({})",
+                s.0.to_string(),
+                &s.1.to_string()[1..s.1.to_string().len() - 1]
+            )
+        })
+        .collect()
 }
 
 pub fn get_package_info() -> Vec<String> {

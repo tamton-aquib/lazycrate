@@ -43,7 +43,7 @@ impl App {
             content: utils::get_output(),
         };
 
-        let nicemap = HashMap::from([
+        let panels = HashMap::from([
             (PanelName::Crates, panel_crates),
             (PanelName::Package, panel_package),
             (PanelName::Status, panel_status),
@@ -52,7 +52,7 @@ impl App {
         ]);
 
         App {
-            panels: nicemap,
+            panels: panels,
             current_panel: PanelName::Package,
             cursor: 0,
             mode: Mode::Normal,
