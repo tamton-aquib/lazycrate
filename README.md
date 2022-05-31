@@ -5,7 +5,7 @@ Shouldve named it as lazycargo but lazycrates sounded good at that time.
 
 WIP, not even alpha.
 
-![lazyyycrates](https://user-images.githubusercontent.com/77913442/171207287-82b5ac7e-6ab1-48b4-b560-cfcab78f11f3.gif)
+![lazycrates](https://user-images.githubusercontent.com/77913442/171209042-fd4fae78-03d3-40aa-aec3-14c5eaf3a8c8.gif)
 
 TODO:
 - [ ] important: add checks (eg. Cargo.toml exists?, or any fields in it)
