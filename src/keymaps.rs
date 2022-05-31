@@ -9,9 +9,9 @@ fn do_command(app: &mut App, cmd: &str) {
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .spawn()
-        .expect("Couldnt not start the process!")
-        .stdout
-        .unwrap();
+        .unwrap()
+        .stdout;
+    // let mut reader = BufReader::new(out).lines();
 
     // let reader = BufReader::new(out);
     // let mut total_lines = vec![];

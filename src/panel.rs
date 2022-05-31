@@ -22,6 +22,6 @@ impl Panel {
             PanelName::Commands => "commands",
             PanelName::Output => "output",
         };
-        format!("This is a help page for {} module!", tp)
+        format!("This is a help page for `{}` module!", tp)
     }
 }
