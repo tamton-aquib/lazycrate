@@ -1,26 +1,7 @@
 use crate::app::App;
 use crate::panel::PanelName;
 // use std::io::{BufRead, BufReader};
-use std::process::{Command, Stdio};
-
-fn do_command(app: &mut App, cmd: &str) {
-    Command::new("cargo")
-        .args(["clippy"])
-        .stdout(Stdio::piped())
-        .stderr(Stdio::piped())
-        .spawn()
-        .unwrap()
-        .stdout;
-    // let mut reader = BufReader::new(out).lines();
-
-    // let reader = BufReader::new(out);
-    // let mut total_lines = vec![];
-    // for s in reader.lines() {
-    // total_lines.push(s.unwrap());
-    // }
-    let fake_out = format!("Command {} successfully completed!", cmd);
-    app.get_specific(PanelName::Output).content = vec![fake_out];
-}
+use crate::commands;
 
 pub fn pressed_enter(app: &mut App) {
     // TODO beautify (currently ugly)
@@ -30,7 +11,8 @@ pub fn pressed_enter(app: &mut App) {
     match app.current_panel {
         PanelName::Commands => {
             match item.as_str() {
-                "clippy" => do_command(app, "clippy"),
+                "clippy" => commands::do_command(app, "clippy"),
+                "fmt" => commands::do_command(app, "fmt"),
                 _ => {}
             }
             // println!("{}", item);

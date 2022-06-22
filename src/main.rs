@@ -55,7 +55,7 @@ fn run_app<B: Backend>(
             .unwrap_or_else(|| Duration::from_secs(0));
         if crossterm::event::poll(timeout)? {
             if let Event::Key(key) = event::read()? {
-                if let Some(_) = parse_keys::parse_keys(&mut app, key) {
+                if parse_keys::parse_keys(&mut app, key).is_some() {
                     return Ok(());
                 };
             }

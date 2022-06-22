@@ -52,7 +52,7 @@ impl App {
         ]);
 
         App {
-            panels: panels,
+            panels,
             current_panel: PanelName::Package,
             cursor: 0,
             mode: Mode::Normal,

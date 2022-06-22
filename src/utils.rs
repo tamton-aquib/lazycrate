@@ -32,8 +32,8 @@ pub fn get_crates_from_toml() -> Vec<String> {
         .iter()
         .map(|s| {
             format!(
-                "{}  ({})",
-                s.0.to_string(),
+                "{} ({})",
+                s.0,
                 &s.1.to_string()[1..s.1.to_string().len() - 1]
             )
         })

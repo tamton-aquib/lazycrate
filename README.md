@@ -10,8 +10,9 @@ WIP, not even alpha.
 TODO:
 - [ ] important: add checks (eg. Cargo.toml exists?, or any fields in it)
 - [ ] better parsing toml file.
+- [ ] better module structure.
 - [ ] implement basic stuff like in lazynpm.
 - [ ] add an actions module.
-- [ ] a popup api (maybe for help pages for the curr panel)
+- [ ] a popup api (maybe for help pages for the current panel)
 - [ ] introduce a theming concept maybe.
 - [ ] add user config options.
