@@ -17,38 +17,47 @@ pub struct App {
 
 impl App {
     pub fn new() -> App {
-        let panel_crates = Panel {
-            index: 0,
-            panel_name: PanelName::Crates,
-            content: utils::get_crates_from_toml(),
-        };
-        let panel_package = Panel {
-            index: 0,
-            panel_name: PanelName::Package,
-            content: utils::get_package_info(),
-        };
-        let panel_status = Panel {
-            index: 0,
-            panel_name: PanelName::Status,
-            content: utils::update_status(),
-        };
-        let panel_commands = Panel {
-            index: 0,
-            panel_name: PanelName::Commands,
-            content: utils::get_commands(),
-        };
-        let panel_output = Panel {
-            index: 0,
-            panel_name: PanelName::Output,
-            content: utils::get_output(),
-        };
-
         let panels = HashMap::from([
-            (PanelName::Crates, panel_crates),
-            (PanelName::Package, panel_package),
-            (PanelName::Status, panel_status),
-            (PanelName::Commands, panel_commands),
-            (PanelName::Output, panel_output),
+            (
+                PanelName::Crates,
+                Panel {
+                    index: 0,
+                    panel_name: PanelName::Crates,
+                    content: utils::get_crates_from_toml(),
+                },
+            ),
+            (
+                PanelName::Package,
+                Panel {
+                    index: 0,
+                    panel_name: PanelName::Package,
+                    content: utils::get_package_info(),
+                },
+            ),
+            (
+                PanelName::Status,
+                Panel {
+                    index: 0,
+                    panel_name: PanelName::Status,
+                    content: utils::update_status(),
+                },
+            ),
+            (
+                PanelName::Commands,
+                Panel {
+                    index: 0,
+                    panel_name: PanelName::Commands,
+                    content: utils::get_commands(),
+                },
+            ),
+            (
+                PanelName::Output,
+                Panel {
+                    index: 0,
+                    panel_name: PanelName::Output,
+                    content: utils::get_output(),
+                },
+            ),
         ]);
 
         App {
