@@ -21,7 +21,7 @@ jobs:
     - name: Run tests
       run: cargo test --verbose
     - name: Upload binaries as artifacts.
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: "lazycrate-linux-x86_64"
         path: "target/release/lazycrate"

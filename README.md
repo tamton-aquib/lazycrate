@@ -1,6 +1,6 @@
 # lazycrate
 
-TUI for crate management like lazydocker and lazynpm.
+TUI for crate management like [lazydocker](https://github.com/jesseduffield/lazydocker) and [lazynpm](https://github.com/jesseduffield/lazynpm).
 Shouldve named it as lazycargo but lazycrates sounded good at that time.
 
 WIP, not even alpha.
