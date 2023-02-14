@@ -16,3 +16,8 @@ tui = "0.18.0"
 toml = "0.5.9"
 serde = "1.0.137"
 serde_derive = "1.0.137"
+
+[profile.optimized]
+inherits = "release"
+opt-level = "z"
+strip = true
