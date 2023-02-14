@@ -1,8 +1,14 @@
 [package]
 name = "lazycrate"
-version = "0.1.0"
-description = "Similar to lazydocker and lazynpm but for crates."
+version = "0.0.1"
+description = "Simple terminal UI for cargo commands."
 edition = "2021"
+license = "MIT"
+homepage = "https://github.com/tamton-aquib/lazycrate"
+repository = "https://github.com/tamton-aquib/lazycrate"
+readme = "README.md"
+documentation = "https://docs.rs/lazycrate"
+keywords = ["cargo", "TUI", "lazy"]
 
 [dependencies]
 crossterm = "0.24.0"
